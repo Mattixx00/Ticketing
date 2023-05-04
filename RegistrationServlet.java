@@ -73,7 +73,7 @@ public class RegistrationServlet extends HttpServlet {
                 conn = DriverManager.getConnection(url, user, password);
 
                 // Esegui la query per inserire i dati nella tabella della registrazione
-                String sql = "INSERT INTO utente (ID,Username,Password,Nome,Cognome,email,anno_classe,Sezione) VALUES (NULL,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO utente (ID,Username,Password,Nome,Cognome,email,anno_classe,Sezione,tipo_user) VALUES (NULL,?,?,?,?,?,?,?,'guest')";
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1, username);
                 stmt.setString(2, password);

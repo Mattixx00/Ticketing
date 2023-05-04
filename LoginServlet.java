@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
             conn = DriverManager.getConnection(url, user, dbPassword);
 
             // Esegui la query per cercare l'utente
-            String sql = "SELECT Username, Nome, Cognome, anno_classe, sezione FROM utente WHERE username=? AND password=?";
+            String sql = "SELECT Username, Nome, Cognome, anno_classe, sezione , tipo_utente FROM utente WHERE username=? AND password=?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
                 jsonResponse.put("cognome", rs.getString("Cognome"));
                 jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
                 jsonResponse.put("sezione", rs.getString("sezione"));
+                jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
             } else {
                 // Altrimenti, restituisci un messaggio di errore
                 jsonResponse.put("status", "error");
