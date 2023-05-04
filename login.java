@@ -1,65 +1,74 @@
-package it.avbo.progettoNSI;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONObject;
 
-/**
- * Servlet implementation class login
- */
-public class login extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class LoginServlet extends HttpServlet {
 
-    /**
-     * Default constructor. 
-     */
-    public login() {
-        // TODO Auto-generated constructor stub
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Imposta l'intestazione della risposta come JSON
+        response.setContentType("application/json");
+
+        // Leggi i dati dal POST
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Cerca l'utente nel database
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            Connection conn = null;
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+
+            // Carica il driver JDBC per il database
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Ottieni la connessione al database
+            String url = "jdbc:mysql://localhost:3306/ticketing";
+            String user = "root";
+            String dbPassword = "";
+            conn = DriverManager.getConnection(url, user, dbPassword);
+
+            // Esegui la query per cercare l'utente
+            String sql = "SELECT Username, Nome, Cognome, anno_classe, sezione FROM utente WHERE username=? AND password=?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
+
+            // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
+            if (rs.next()) {
+                jsonResponse.put("status", "success");
+                jsonResponse.put("username", rs.getString("Username"));
+                jsonResponse.put("name", rs.getString("Nome"));
+                jsonResponse.put("cognome", rs.getString("Cognome"));
+                jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
+                jsonResponse.put("sezione", rs.getString("sezione"));
+            } else {
+                // Altrimenti, restituisci un messaggio di errore
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Invalid username or password");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "An error occurred while processing your request");
+        }
+
+        // Scrivi la risposta come JSON
+        PrintWriter out = response.getWriter();
+        out.print(jsonResponse.toJSONString());
+        out.flush();
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-		
-	     try {
-             // Carica il driver JDBC per il database
-             Class.forName("com.mysql.cj.jdbc.Driver");
-             PreparedStatement stmt= null;
-             // Ottieni la connessione al database
-             String url = "jdbc:mysql://localhost:3306/ticketing";
-             String user = "root";
-             String password = "";
-             Connection conn = DriverManager.getConnection(url, user, password);
-
-             // Esegui la query per inserire i dati nella tabella della registrazione
-             String sql = "SELECT * FROM utente WHERE username=? and password=?";
-             stmt = conn.prepareStatement(sql);
-             stmt.setString(1, request.getParameter("username"));
-             stmt.setString(1, request.getParameter("password"));
-             ResultSet rowsInserted = stmt.executeQuery();
-             
-             while (rs.next()) {
-            	 
-             }
-         }
-	}
-
 }
