@@ -47,8 +47,10 @@ public class LoginServlet extends HttpServlet {
             stmt.setString(2, password);
             rs = stmt.executeQuery();
 
-            // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
-            if (rs.next()) {
+            // Altrimenti, restituisci un messaggio di errore
+            if (!rs.next()) {
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Invalid username or password");
                 jsonResponse.put("status", "success");
                 jsonResponse.put("username", rs.getString("Username"));
                 jsonResponse.put("name", rs.getString("Nome"));
@@ -57,9 +59,15 @@ public class LoginServlet extends HttpServlet {
                 jsonResponse.put("sezione", rs.getString("sezione"));
                 jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
             } else {
+                // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
                 // Altrimenti, restituisci un messaggio di errore
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", "Invalid username or password");
+                jsonResponse.put("status", "success");
+                jsonResponse.put("username", rs.getString("Username"));
+                jsonResponse.put("name", rs.getString("Nome"));
+                jsonResponse.put("cognome", rs.getString("Cognome"));
+                jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
+                jsonResponse.put("sezione", rs.getString("sezione"));
+                jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
             }
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
