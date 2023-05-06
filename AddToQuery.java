@@ -25,8 +25,8 @@ public class AddToQuery extends HttpServlet {
         response.setContentType("application/json");
 
         // Leggi i dati dal POST
-        String idUtente = request.getParameter("id_utente");
-        String idTicket = request.getParameter("id_ticket");
+        int idUtente = Integer.parseInt(request.getParameter("id_utente"));
+        int idTicket = Integer.parseInt(request.getParameter("id_ticket"));
 
         // Cerca l'utente nel database
         JsonObject result = new JsonObject();
@@ -50,8 +50,8 @@ public class AddToQuery extends HttpServlet {
             // Esegui la query per cercare l'utente
             String sql = "INSERT INTO class (ID_Studente,ID_Ticket,Querystatus) VALUES (?,?,'in attesa')";
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, idUtente);
-            stmt.setString(2, idTicket);
+            stmt.setInt(1, idUtente);
+            stmt.setInt(2, idTicket);
             int rowsInserted = stmt.executeUpdate();
 
             if (rowsInserted > 0) {
