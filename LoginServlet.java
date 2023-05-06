@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
             conn = DriverManager.getConnection(url, user, dbPassword);
 
             // Esegui la query per cercare l'utente
-            String sql = "SELECT Username, Nome, Cognome, anno_classe, sezione , tipo_utente FROM utente WHERE username=? AND password=?";
+            String sql = "SELECT * FROM utente WHERE username=? AND password=?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -51,13 +51,6 @@ public class LoginServlet extends HttpServlet {
             if (!rs.next()) {
                 jsonResponse.put("status", "error");
                 jsonResponse.put("message", "Invalid username or password");
-                jsonResponse.put("status", "success");
-                jsonResponse.put("username", rs.getString("Username"));
-                jsonResponse.put("name", rs.getString("Nome"));
-                jsonResponse.put("cognome", rs.getString("Cognome"));
-                jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
-                jsonResponse.put("sezione", rs.getString("sezione"));
-                jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
             } else {
                 // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
                 // Altrimenti, restituisci un messaggio di errore
@@ -67,7 +60,9 @@ public class LoginServlet extends HttpServlet {
                 jsonResponse.put("cognome", rs.getString("Cognome"));
                 jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
                 jsonResponse.put("sezione", rs.getString("sezione"));
+                jsonResponse.put("indirizzo", rs.getString("indirizzo"));
                 jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
+
             }
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();

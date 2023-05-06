@@ -27,6 +27,7 @@ public class RegistrationServlet extends HttpServlet {
         String cognome = request.getParameter("cognome");
         int anno_classe = Integer.parseInt(request.getParameter("anno_classe"));
         String sezione = request.getParameter("sezione");
+        String indirizzo = request.getParameter("indirizzo");
 
         JSONObject jsonResponse = new JSONObject();
 
@@ -44,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
 
 
             // Effettua la registrazione
-            boolean registrationSuccess = registerUser(username, name, email, password, cognome, anno_classe, sezione);
+            boolean registrationSuccess = registerUser(username, name, email, password, cognome, anno_classe, sezione,indirizzo);
 
             // Crea un oggetto JSON per la risposta
             JSONObject jsonResponse = new JSONObject();
@@ -57,7 +58,7 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         private boolean registerUser (String username, String name, String email, String password, String cognome,
-        int anno_classe, String sezione){
+        int anno_classe, String sezione,String indirizzo){
             boolean registrationSuccess = true;
             Connection conn = null;
             PreparedStatement stmt = null;
@@ -73,7 +74,7 @@ public class RegistrationServlet extends HttpServlet {
                 conn = DriverManager.getConnection(url, user, password);
 
                 // Esegui la query per inserire i dati nella tabella della registrazione
-                String sql = "INSERT INTO utente (ID,Username,Password,Nome,Cognome,email,anno_classe,Sezione,tipo_user) VALUES (NULL,?,?,?,?,?,?,?,'guest')";
+                String sql = "INSERT INTO utente (ID,Username,Password,Nome,Cognome,email,anno_classe,Sezione,indirizzo,tipo_user) VALUES (NULL,?,?,?,?,?,?,?,?,'guest')";
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1, username);
                 stmt.setString(2, password);
@@ -82,6 +83,7 @@ public class RegistrationServlet extends HttpServlet {
                 stmt.setString(5, email);
                 stmt.serInt(6, anno_classe);
                 stmt.setString(7, sezione);
+                stmt.setString(8, indirizzo);
                 int rowsInserted = stmt.executeUpdate();
 
                 if (rowsInserted > 0) {

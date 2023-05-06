@@ -49,7 +49,7 @@ public class StampaUtente extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT username,email,nome,cognome,anno_classe,sezione FROM utente WHERE id=?";
+        String sql = "SELECT * FROM utente WHERE id=?";
         try {
             stmt = conn.prepareStatement(sql);
         } catch (SQLException e) {
@@ -88,6 +88,7 @@ public class StampaUtente extends HttpServlet {
                 Utente.addProperty("cognome", rs.getString("cognome"));
                 Utente.addProperty("anno_classe", rs.getString("anno_classe"));
                 Utente.addProperty("sezione", rs.getString("sezione"));
+                jsonResponse.put("indirizzo", rs.getString("indirizzo"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
