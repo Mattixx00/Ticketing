@@ -3,6 +3,7 @@ package it.ProgettoNSI;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.google.gson.JsonArray;
@@ -41,9 +42,12 @@ public class Edit extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.addHeader("Access-Control-Allow-Origin", "*");
+
 		MysqlDataSource dataSource = new MysqlDataSource();
-		dataSource.setDatabaseName("ticketing");
+		dataSource.setDatabaseName("ticketing2");
 		//response.getWriter().append( ",");
+		String ID=request.getParameter("ID");
 		String Nome=request.getParameter("Nome");
 		String Cognome=request.getParameter("Cognome");
 		String email=request.getParameter("email");
@@ -52,27 +56,35 @@ public class Edit extends HttpServlet {
 		String indirizzo=request.getParameter("Indirizzo");
 		//L'ID sarà passato in sessione
 		JsonObject Resp = new JsonObject();
-		String qry="UPDATE utente SET Nome=?, Cognome =?, email =?, anno_classe=? ,Sezione=?,Indirizzo=? WHERE ID=1";
+		String qry="UPDATE utente SET Nome=?, Cognome =?, email =?, anno_classe=? ,Sezione=?,tipo_utente=? WHERE ID=?";
 		try(Connection conn = dataSource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
+		try {
 		pstmt.setString(1,Nome);
 		pstmt.setString(2,Cognome);
 		pstmt.setString(3,email);
-		pstmt.setString(4,anno_classe);
-		pstmt.setInt(5,Integer.parseInt(sezione));
+		pstmt.setInt(4,Integer.parseInt(anno_classe));
+		pstmt.setString(5,sezione);
 		pstmt.setString(6,indirizzo);
+		pstmt.setInt(7,Integer.parseInt(ID));
 		int success=pstmt.executeUpdate();
 		if(success>0) {
-			Resp.addProperty("edit-status", "success");
+			Resp.addProperty("editstatus", "success");
 		}else {
-			Resp.addProperty("edit-status", "failure");
+			Resp.addProperty("editstatus", "failure");
+		}
+		}catch(SQLException ex) {
+			Resp.addProperty("editstatus", "failure");
+
 		}
 		
+		
+	
+		
+			
+		}catch(Exception ex) {Resp.addProperty("editstatus", "failure");}
 		response.getWriter().append(Resp.toString());
 		
-			
-		}catch(Exception ex) {System.err.println(ex.getMessage());}{
-			
-		}
+		
 	}
 
 }

@@ -42,30 +42,39 @@ public class EditTicket extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		JsonObject modifiedticket = new JsonObject();
+
 		PrintWriter out = response.getWriter();
-	int IDTicket = Integer.parseInt(request.getParameter("ID"));
+	
 	String materia = request.getParameter("Materia");
 	String descrizione = request.getParameter("Descrizione");
+log(materia);
 	MysqlDataSource datasource = new MysqlDataSource();
-	datasource.setDatabaseName("ticketing");
-	String sql = "UPDATE tickets SET Materia=?, descrizione=? WHERE id=?";
-	JsonObject modifiedticket = new JsonObject();
+	datasource.setDatabaseName("ticketing2");
+	String sql = "UPDATE ticket SET Materia=?, descrizione=? WHERE id=?";
 		    try (Connection conn = datasource.getConnection("root", "");  PreparedStatement pstmt= conn.prepareStatement(sql);) {
-		        
+		        try {
 		        pstmt.setString(1, materia);
 		        pstmt.setString(2, descrizione);
-		        pstmt.setInt(3, IDTicket);
+		        pstmt.setInt(3, Integer.parseInt(request.getParameter("IDTICKET")));
+		        }catch(Exception e) {
+		        	modifiedticket.addProperty("editTicketstatus", "error");
+		        }
 		        int success=pstmt.executeUpdate();
 				if(success>0) {
-					modifiedticket.addProperty("editTicket-status", "successful");
+				
+					modifiedticket.addProperty("editTicketstatus", "successful");
 					modifiedticket.addProperty("Materia", materia);
 					modifiedticket.addProperty("Descrizione", descrizione);
+					log("d");
 				}else {
-					modifiedticket.addProperty("edit-status", "failure");
+					modifiedticket.addProperty("editTicketstatus", "error");
 				}
 		    } catch (SQLException ex) {
-		        ex.printStackTrace();
+		    	modifiedticket.addProperty("editTicketstatus", "error");
 		    }
+		    log(modifiedticket.toString());
 		    out.append(modifiedticket.toString());
 		    
 	}

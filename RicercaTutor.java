@@ -46,18 +46,19 @@ public class RicercaTutor extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		JsonArray arrTutor=new JsonArray();
 		JsonObject toSend = new JsonObject();
-		String materia = request.getParameter("materia");
+		String materia = request.getParameter("Materia");
+		log(materia);
 		PrintWriter out = response.getWriter();
+		
 		MysqlDataSource dataSource = new MysqlDataSource();
-		dataSource.setDatabaseName("ticketing");
-		if(materia.equals(null)) { //Controllo se la materia è null se così esegueo un tipo di query
+		dataSource.setDatabaseName("ticketing2");
+		if(materia.equals("NOFILTRI")) { //Controllo se la materia è null se così esegueo un tipo di query
 		String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione"
 				+ " FROM ticket t inner join utente u on t.ID_utente=u.ID;";
 		try(Connection conn = dataSource.getConnection("root", ""); Statement stmt = conn.createStatement()){
+			try {
 			ResultSet rs = stmt.executeQuery(qry);
-			if(!rs.next()) {
-			toSend.addProperty("Found", "failure");
-			}else {
+			
 			while(rs.next()) {
 				JsonObject ticket = new JsonObject();
 				int IDTutor = rs.getInt("ID");
@@ -76,12 +77,14 @@ public class RicercaTutor extends HttpServlet {
 				ticket.addProperty("Sezione", Sezione);
 				ticket.addProperty("Materia", Materia);
 				ticket.addProperty("Descrizione", Descrizione);
-				arrTutor.add(ticket);												
+				arrTutor.add(ticket);						 						
 			}
 			
-			toSend.addProperty("Found", "successful");
+			toSend.addProperty("FoundStatus", "successful");
 			toSend.add("Tutors",arrTutor);
 			
+			}catch(Exception e) {
+				toSend.addProperty("FoundStatus", "error");
 			}
 			log(toSend.toString());
 			out.append(toSend.toString());
@@ -89,7 +92,7 @@ public class RicercaTutor extends HttpServlet {
 			
 			
 		}catch(Exception e) {
-			System.err.println(e.getMessage());
+			toSend.addProperty("FoundStatus", "error");
 		}
 		
 			
@@ -98,10 +101,10 @@ public class RicercaTutor extends HttpServlet {
 					+ " FROM ticket t inner join utente u on t.ID_utente=u.ID where materia=?";
 			try(Connection conn = dataSource.getConnection("root", ""); PreparedStatement stmt = conn.prepareStatement(qry)){
 				stmt.setString(1, materia);
+			
+			try {
 				ResultSet rs = stmt.executeQuery();
-				if(!rs.next()) {
-				toSend.addProperty("Found", "failure");
-				}else {
+			
 				while(rs.next()) {
 					JsonObject ticket = new JsonObject();
 					int IDTutor = rs.getInt("ID");
@@ -126,14 +129,17 @@ public class RicercaTutor extends HttpServlet {
 				toSend.addProperty("Found", "successful");
 				toSend.add("Tutors",arrTutor);
 				
-				}
+				
+			}catch(Exception e) {
+				toSend.addProperty("Found", "error");
+			}
 				log(toSend.toString());
 				out.append(toSend.toString());
 				
 				
 				
 			}catch(Exception e) {
-				System.err.println(e.getMessage());
+				toSend.addProperty("Found", "error");
 			}
 			
 			
