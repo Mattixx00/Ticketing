@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: May 02, 2023 at 12:56 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Host: 127.0.0.1
+-- Creato il: Mag 04, 2023 alle 18:18
+-- Versione del server: 10.4.27-MariaDB
+-- Versione PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,16 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `Ticketing`
+-- Database: `ticketing`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CLASS`
+-- Struttura della tabella `class`
 --
 
-CREATE TABLE `CLASS` (
+CREATE TABLE `class` (
   `ID_Studente` int(11) NOT NULL,
   `ID_Ticket` int(11) NOT NULL,
   `LVLCompetenzaStudente` varchar(30) NOT NULL,
@@ -37,10 +37,10 @@ CREATE TABLE `CLASS` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ticket`
+-- Struttura della tabella `ticket`
 --
 
-CREATE TABLE `Ticket` (
+CREATE TABLE `ticket` (
   `ID` int(11) NOT NULL,
   `Materia` varchar(30) NOT NULL,
   `Descrizione` varchar(254) NOT NULL
@@ -49,10 +49,10 @@ CREATE TABLE `Ticket` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Utente`
+-- Struttura della tabella `utente`
 --
 
-CREATE TABLE `Utente` (
+CREATE TABLE `utente` (
   `ID` int(11) NOT NULL,
   `Username` varchar(20) NOT NULL,
   `Password` varchar(254) NOT NULL,
@@ -60,39 +60,40 @@ CREATE TABLE `Utente` (
   `Cognome` varchar(20) NOT NULL,
   `email` varchar(35) NOT NULL,
   `anno_classe` int(11) NOT NULL,
-  `Sezione` varchar(10) NOT NULL
+  `Sezione` varchar(10) NOT NULL,
+  `tipo_utente` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Indici per le tabelle scaricate
 --
 
 --
--- Indexes for table `Ticket`
+-- Indici per le tabelle `ticket`
 --
-ALTER TABLE `Ticket`
+ALTER TABLE `ticket`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indexes for table `Utente`
+-- Indici per le tabelle `utente`
 --
-ALTER TABLE `Utente`
+ALTER TABLE `utente`
   ADD PRIMARY KEY (`ID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT per le tabelle scaricate
 --
 
 --
--- AUTO_INCREMENT for table `Ticket`
+-- AUTO_INCREMENT per la tabella `ticket`
 --
-ALTER TABLE `Ticket`
+ALTER TABLE `ticket`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `Utente`
+-- AUTO_INCREMENT per la tabella `utente`
 --
-ALTER TABLE `Utente`
+ALTER TABLE `utente`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
