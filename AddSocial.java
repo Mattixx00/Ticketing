@@ -54,13 +54,13 @@ public class AddSocial extends HttpServlet {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, idUtente);
             stmt.setString(2, descrizione);
-            int rowsInserted = stmt.executeUpdate();
 
-            if (rowsInserted > 0) {
-
-                result.addProperty("AddSocial","success");
-            }else {
+            try{
+            stmt.executeUpdate();
+            result.addProperty("AddSocial","success");
+            }catch (SQLException e){
                 result.addProperty("AddSocial","failure");
+                e.printStackTrace();
             }
 
             PrintWriter out = response.getWriter();

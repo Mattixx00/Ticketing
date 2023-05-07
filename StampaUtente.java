@@ -68,31 +68,19 @@ public class StampaUtente extends HttpServlet {
         ResultSet rs;
         try {
             rs = stmt.executeQuery();
+            Utente.addProperty("status", rs.getString("success"));
+            Utente.addProperty("username", rs.getString("username"));
+            Utente.addProperty("email", rs.getString("email"));
+            Utente.addProperty("nome", rs.getString("nome"));
+            Utente.addProperty("cognome", rs.getString("cognome"));
+            Utente.addProperty("anno_classe", rs.getString("anno_classe"));
+            Utente.addProperty("sezione", rs.getString("sezione"));
+            Utente.addProperty("indirizzo", rs.getString("indirizzo"));
         } catch (SQLException e) {
+            Utente.addProperty("status","failure");
             throw new RuntimeException(e);
         }
 
-        try {
-            if(!rs.next()){
-
-                Utente.addProperty("status","failure");
-
-
-            }
-            else {
-
-                Utente.addProperty("status", rs.getString("success"));
-                Utente.addProperty("username", rs.getString("username"));
-                Utente.addProperty("email", rs.getString("email"));
-                Utente.addProperty("nome", rs.getString("nome"));
-                Utente.addProperty("cognome", rs.getString("cognome"));
-                Utente.addProperty("anno_classe", rs.getString("anno_classe"));
-                Utente.addProperty("sezione", rs.getString("sezione"));
-                jsonResponse.put("indirizzo", rs.getString("indirizzo"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
 
         out.print(Utente.toString());

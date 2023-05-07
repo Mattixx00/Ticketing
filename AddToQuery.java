@@ -52,13 +52,13 @@ public class AddToQuery extends HttpServlet {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, idUtente);
             stmt.setInt(2, idTicket);
-            int rowsInserted = stmt.executeUpdate();
 
-            if (rowsInserted > 0) {
-
-                result.addProperty("AddToQuery","success");
-            }else {
-                result.addProperty("AddToQuery","failure");
+            try{
+                stmt.executeUpdate();
+                result.addProperty("AddSocial","success");
+            }catch (SQLException e){
+                result.addProperty("AddSocial","failure");
+                e.printStackTrace();
             }
 
             PrintWriter out = response.getWriter();

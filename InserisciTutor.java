@@ -73,18 +73,15 @@ public class InserisciTutor extends HttpServlet {
         int rowsInserted;
         try {
             rowsInserted = stmt.executeUpdate();
+            ticket.addProperty("status", "success");
         } catch (SQLException e) {
+            ticket.addProperty("status", "failure");
+
             throw new RuntimeException(e);
         }
 
 
-        if (rowsInserted > 0) {
 
-            ticket.addProperty("status", "success");
-
-        } else {
-            ticket.addProperty("status", "failure");
-        }
 
 
         out.print(ticket.toString());
