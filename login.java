@@ -14,51 +14,64 @@ import java.sql.ResultSet;
 /**
  * Servlet implementation class login
  */
-public class login extends HttpServlet {
+@WebServlet("/login") // specifica l'URL a cui la servlet risponde
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor. 
      */
-    public login() {
-        // TODO Auto-generated constructor stub
+    public LoginServlet() {
+        super();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-		
 	     try {
              // Carica il driver JDBC per il database
              Class.forName("com.mysql.cj.jdbc.Driver");
-             PreparedStatement stmt= null;
+             
              // Ottieni la connessione al database
              String url = "jdbc:mysql://localhost:3306/ticketing";
              String user = "root";
              String password = "";
              Connection conn = DriverManager.getConnection(url, user, password);
 
-             // Esegui la query per inserire i dati nella tabella della registrazione
+             // Esegui la query per verificare le credenziali dell'utente
              String sql = "SELECT * FROM utente WHERE username=? and password=?";
-             stmt = conn.prepareStatement(sql);
+             PreparedStatement stmt = conn.prepareStatement(sql);
              stmt.setString(1, request.getParameter("username"));
-             stmt.setString(1, request.getParameter("password"));
-             ResultSet rowsInserted = stmt.executeQuery();
+             stmt.setString(2, request.getParameter("password"));
+             ResultSet rs = stmt.executeQuery();
              
-             while (rs.next()) {
-            	 
+             if (rs.next()) {
+                 // Le credenziali sono valide, reindirizza alla pagina di benvenuto
+                 response.sendRedirect("welcome.jsp");
+             } else {
+                 // Le credenziali non sono valide, mostra un messaggio di errore
+                 response.sendRedirect("login.jsp?error=1");
              }
+             
+             // Chiudi le risorse
+             rs.close();
+             stmt.close();
+             conn.close();
+             
+         } catch (Exception e) {
+             // In caso di errore, mostra un messaggio di errore generico
+             response.sendRedirect("login.jsp?error=2");
+             e.printStackTrace();
          }
 	}
 
