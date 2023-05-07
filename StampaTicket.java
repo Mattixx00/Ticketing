@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -41,22 +42,34 @@ public class StampaTicket extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		MysqlDataSource datasource = new MysqlDataSource();
-		datasource.setDatabaseName("ticketing");
+		datasource.setDatabaseName("ticketing2");
 		JsonObject toSend = new JsonObject();
 		JsonArray ArrTicket = new JsonArray();
 		String qry="SELECT * FROM ticket WHERE ID_utente=?";
 		try(Connection conn = datasource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
-			pstmt.setString(1,request.getParameter("ID_Utente"));
-			ResultSet rs = pstmt.executeQuery();
-			if(!rs.next())
+			try {
+			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID_Utente")));
+			}catch(Exception e) {
+				toSend.addProperty("sendstatus", "error");
+			}
+			
+		/*	if(!rs.next())
 			{
 				toSend.addProperty("send-status", "failure");
-			}else {
+			}else {*/
+			try {
+				ResultSet rs = pstmt.executeQuery();
+				toSend.addProperty("sendstatus", "success");
+			
 			while(rs.next()) {
+				
 				JsonObject TicketJson = new JsonObject();
 				int IDTicket = rs.getInt("ID");
+				
 				String materia = rs.getString("Materia");
+				
 				String descrizione = rs.getString("Descrizione");
 				TicketJson.addProperty("ID", IDTicket);
 				TicketJson.addProperty("Materia",materia);
@@ -64,18 +77,27 @@ public class StampaTicket extends HttpServlet {
 				ArrTicket.add(TicketJson);
 				
 			
-			toSend.addProperty("send-status", "success");
+			
 			toSend.add("Tickets", ArrTicket);
 			}
+			
+			}catch(SQLException sqe) {
+				sqe.printStackTrace();
+				toSend.addProperty("sendstatus", "error");
 			}
+			//}
 			
+		//	log(toSend.toString());
 			
-			response.getWriter().append(toSend.toString());
 			
 				
-			}catch(Exception ex) {System.err.println(ex.getMessage());}
-	}	
 			
+	}catch(SQLException sqe) {
+		sqe.printStackTrace();
+		toSend.addProperty("send-status", "error");
 	}
+		response.getWriter().append(toSend.toString());		
+	}
+}
 
 
