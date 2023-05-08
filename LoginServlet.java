@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
                 // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
                 // Altrimenti, restituisci un messaggio di errore
                 jsonResponse.put("status", "success");
+                jsonResponse.put("id_utente", rs.getString("ID"));
                 jsonResponse.put("username", rs.getString("Username"));
                 jsonResponse.put("name", rs.getString("Nome"));
                 jsonResponse.put("cognome", rs.getString("Cognome"));
