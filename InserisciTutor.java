@@ -20,6 +20,7 @@ public class InserisciTutor extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter out = response.getWriter();
 

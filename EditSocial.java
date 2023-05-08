@@ -26,6 +26,7 @@ public class EditSocial extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         // Imposta l'intestazione della risposta come JSON
         response.setContentType("application/json");

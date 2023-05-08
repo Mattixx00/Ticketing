@@ -16,6 +16,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         // Imposta l'intestazione della risposta come JSON
         response.setContentType("application/json");
