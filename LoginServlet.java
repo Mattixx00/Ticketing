@@ -1,3 +1,5 @@
+package com.example.login;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -5,14 +7,22 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.json.simple.JSONObject;
 
+@WebServlet(name = "Login",value = "/login")
 public class LoginServlet extends HttpServlet {
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.getWriter().append("Served at: ").append(request.getContextPath());
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -26,7 +36,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         // Cerca l'utente nel database
-        JSONObject jsonResponse = new JSONObject();
+        JsonObject jsonResponse = new JsonObject();
         try {
             Connection conn = null;
             PreparedStatement stmt = null;
@@ -50,31 +60,31 @@ public class LoginServlet extends HttpServlet {
 
             // Altrimenti, restituisci un messaggio di errore
             if (!rs.next()) {
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", "Invalid username or password");
+                jsonResponse.addProperty("status", "error");
+                jsonResponse.addProperty("message", "Invalid username or password");
             } else {
                 // Se l'utente è stato trovato, crea l'oggetto JSON con le informazioni dell'utente
                 // Altrimenti, restituisci un messaggio di errore
-                jsonResponse.put("status", "success");
-                jsonResponse.put("id_utente", rs.getString("ID"));
-                jsonResponse.put("username", rs.getString("Username"));
-                jsonResponse.put("name", rs.getString("Nome"));
-                jsonResponse.put("cognome", rs.getString("Cognome"));
-                jsonResponse.put("anno_classe", rs.getInt("anno_classe"));
-                jsonResponse.put("sezione", rs.getString("sezione"));
-                jsonResponse.put("indirizzo", rs.getString("indirizzo"));
-                jsonResponse.put("tipo_utente", rs.getString("tipo_utente"));
+                jsonResponse.addProperty("status", "success");
+                jsonResponse.addProperty("id_utente", rs.getString("ID"));
+                jsonResponse.addProperty("username", rs.getString("Username"));
+                jsonResponse.addProperty("name", rs.getString("Nome"));
+                jsonResponse.addProperty("cognome", rs.getString("Cognome"));
+                jsonResponse.addProperty("anno_classe", rs.getInt("anno_classe"));
+                jsonResponse.addProperty("sezione", rs.getString("sezione"));
+                jsonResponse.addProperty("indirizzo", rs.getString("indirizzo"));
+                jsonResponse.addProperty("tipo_utente", rs.getString("tipo_utente"));
 
             }
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
-            jsonResponse.put("status", "error");
-            jsonResponse.put("message", "An error occurred while processing your request");
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "An error occurred while processing your request");
         }
 
         // Scrivi la risposta come JSON
         PrintWriter out = response.getWriter();
-        out.print(jsonResponse.toJSONString());
+        out.print(jsonResponse.toString());
         out.flush();
     }
 }
