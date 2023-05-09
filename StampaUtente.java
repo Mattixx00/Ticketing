@@ -1,4 +1,4 @@
-package com.example.stampautente;
+package com.example.login;
 
 import java.io.*;
 import java.sql.*;
@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "StampaUtente", value = "/StampaUtente")
 public class StampaUtente extends HttpServlet {
     private String message;
 
@@ -35,7 +35,7 @@ public class StampaUtente extends HttpServlet {
 
         // Carica il driver JDBC per il database
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -61,22 +61,23 @@ public class StampaUtente extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        try {
-            int rowsInserted = stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         ResultSet rs;
         try {
             rs = stmt.executeQuery();
-            Utente.addProperty("status", rs.getString("success"));
-            Utente.addProperty("username", rs.getString("username"));
-            Utente.addProperty("email", rs.getString("email"));
-            Utente.addProperty("nome", rs.getString("nome"));
-            Utente.addProperty("cognome", rs.getString("cognome"));
-            Utente.addProperty("anno_classe", rs.getString("anno_classe"));
-            Utente.addProperty("sezione", rs.getString("sezione"));
-            Utente.addProperty("indirizzo", rs.getString("indirizzo"));
+            if(rs.next()) {
+                Utente.addProperty("status", "success");
+                Utente.addProperty("username", rs.getString("username"));
+                Utente.addProperty("email", rs.getString("email"));
+                Utente.addProperty("nome", rs.getString("nome"));
+                Utente.addProperty("cognome", rs.getString("cognome"));
+                Utente.addProperty("anno_classe", rs.getString("anno_classe"));
+                Utente.addProperty("sezione", rs.getString("sezione"));
+                Utente.addProperty("indirizzo", rs.getString("indirizzo"));
+                Utente.addProperty("zona_geografica", rs.getString("zona_geografica"));
+
+            }else{
+                Utente.addProperty("status","utente non esistente");
+            }
         } catch (SQLException e) {
             Utente.addProperty("status","failure");
             throw new RuntimeException(e);
