@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 04, 2023 alle 18:18
+-- Creato il: Mag 09, 2023 alle 11:09
 -- Versione del server: 10.4.27-MariaDB
 -- Versione PHP: 8.2.0
 
@@ -37,6 +37,18 @@ CREATE TABLE `class` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `social`
+--
+
+CREATE TABLE `social` (
+  `id` int(11) NOT NULL,
+  `id_utente` int(11) NOT NULL,
+  `descrizione` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `ticket`
 --
 
@@ -61,12 +73,19 @@ CREATE TABLE `utente` (
   `email` varchar(35) NOT NULL,
   `anno_classe` int(11) NOT NULL,
   `Sezione` varchar(10) NOT NULL,
+  `zona_geoografica` varchar(255) NOT NULL,
   `tipo_utente` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indici per le tabelle scaricate
 --
+
+--
+-- Indici per le tabelle `social`
+--
+ALTER TABLE `social`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indici per le tabelle `ticket`
@@ -83,6 +102,12 @@ ALTER TABLE `utente`
 --
 -- AUTO_INCREMENT per le tabelle scaricate
 --
+
+--
+-- AUTO_INCREMENT per la tabella `social`
+--
+ALTER TABLE `social`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `ticket`
