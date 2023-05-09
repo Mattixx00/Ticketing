@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 09, 2023 alle 11:09
+-- Creato il: Mag 09, 2023 alle 18:16
 -- Versione del server: 10.4.27-MariaDB
--- Versione PHP: 8.2.0
+-- Versione PHP: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,6 +34,16 @@ CREATE TABLE `class` (
   `QueryStatus` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `class`
+--
+
+INSERT INTO `class` (`ID_Studente`, `ID_Ticket`, `LVLCompetenzaStudente`, `QueryStatus`) VALUES
+(2, 3, 'BASSO', 'Inclass'),
+(1, 2, 'ALTO', 'Inclass'),
+(2, 2, 'NO', 'Incoda'),
+(2, 2, 'BASSO', 'Inclass');
+
 -- --------------------------------------------------------
 
 --
@@ -55,8 +65,19 @@ CREATE TABLE `social` (
 CREATE TABLE `ticket` (
   `ID` int(11) NOT NULL,
   `Materia` varchar(30) NOT NULL,
-  `Descrizione` varchar(254) NOT NULL
+  `Descrizione` varchar(254) NOT NULL,
+  `ID_Utente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `ticket`
+--
+
+INSERT INTO `ticket` (`ID`, `Materia`, `Descrizione`, `ID_Utente`) VALUES
+(1, 'GEOGRAFIA', 'CIAO', 1),
+(2, 'ITALIANO', 'NONONO', 1),
+(3, 'ECONOMIA\r\n                    ', 'CIAO', 2),
+(4, 'MATEMATICA', 'NONONO', 2);
 
 -- --------------------------------------------------------
 
@@ -73,25 +94,42 @@ CREATE TABLE `utente` (
   `email` varchar(35) NOT NULL,
   `anno_classe` int(11) NOT NULL,
   `Sezione` varchar(10) NOT NULL,
-  `zona_geoografica` varchar(255) NOT NULL,
+  `zona_geografica` varchar(255) NOT NULL,
   `tipo_utente` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `utente`
+--
+
+INSERT INTO `utente` (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `zona_geografica`, `tipo_utente`) VALUES
+(1, 'Username', 'age', 'ggg', 'ggg', 'ggg', 4, 'gdf', 'gsdf', 'gs'),
+(2, 'sger', 'age', 'ag', 'hrts', 'gaer', 4, 'ger', 'gaer', 'hrt');
 
 --
 -- Indici per le tabelle scaricate
 --
 
 --
+-- Indici per le tabelle `class`
+--
+ALTER TABLE `class`
+  ADD KEY `ID_Studente` (`ID_Studente`),
+  ADD KEY `ID_Ticket` (`ID_Ticket`);
+
+--
 -- Indici per le tabelle `social`
 --
 ALTER TABLE `social`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_utente` (`id_utente`);
 
 --
 -- Indici per le tabelle `ticket`
 --
 ALTER TABLE `ticket`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ID_Utente` (`ID_Utente`);
 
 --
 -- Indici per le tabelle `utente`
@@ -113,13 +151,36 @@ ALTER TABLE `social`
 -- AUTO_INCREMENT per la tabella `ticket`
 --
 ALTER TABLE `ticket`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `utente`
 --
 ALTER TABLE `utente`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Limiti per le tabelle scaricate
+--
+
+--
+-- Limiti per la tabella `class`
+--
+ALTER TABLE `class`
+  ADD CONSTRAINT `class_ibfk_1` FOREIGN KEY (`ID_Studente`) REFERENCES `utente` (`ID`),
+  ADD CONSTRAINT `class_ibfk_2` FOREIGN KEY (`ID_Ticket`) REFERENCES `ticket` (`ID`);
+
+--
+-- Limiti per la tabella `social`
+--
+ALTER TABLE `social`
+  ADD CONSTRAINT `social_ibfk_1` FOREIGN KEY (`id_utente`) REFERENCES `utente` (`ID`);
+
+--
+-- Limiti per la tabella `ticket`
+--
+ALTER TABLE `ticket`
+  ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`ID_Utente`) REFERENCES `utente` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
