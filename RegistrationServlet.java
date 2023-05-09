@@ -1,4 +1,4 @@
-package com.example.registrazione;
+package com.example.login;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -6,13 +6,19 @@ import java.sql.*;
 
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@WebServlet(name = "Register",value = "/register")
+public class Register extends HttpServlet {
 
-public class Registration extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        response.getWriter().append("Served at: ").append(request.getContextPath());
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,6 +37,7 @@ public class Registration extends HttpServlet {
         int anno_classe = Integer.parseInt(request.getParameter("anno_classe"));
         String sezione = request.getParameter("sezione");
         String indirizzo = request.getParameter("indirizzo");
+        String zona_geografica = request.getParameter("zona_geografica");
 
         JsonObject jsonResponse = new JsonObject();
 
@@ -48,15 +55,14 @@ public class Registration extends HttpServlet {
 
 
             // Effettua la registrazione
-            boolean registrationSuccess = register(username, name, email, password, cognome, anno_classe, sezione, indirizzo);
+            boolean registrationSuccess = register(username, name, email, password, cognome, anno_classe, sezione, indirizzo,zona_geografica);
 
-            // Crea un oggetto JSON per la risposta
-            JsonObject jonny = new JsonObject();
-            jonny.addProperty("status-registration", registrationSuccess ? "success" : "failed");
+
+            jsonResponse.addProperty("status-registration", registrationSuccess ? "success" : "failed");
 
             // Scrivi la risposta come JSON
             PrintWriter out = response.getWriter();
-            out.print(jonny.toString());
+            out.print(jsonResponse.toString());
             out.flush();
         }
 
@@ -70,7 +76,7 @@ public class Registration extends HttpServlet {
 
         try {
             // Carica il driver JDBC per il database
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
 
             // Ottieni la connessione al database
             String url = "jdbc:mysql://localhost:3306/ticketing";
@@ -84,7 +90,11 @@ public class Registration extends HttpServlet {
             stmt.setString(1, username);
 
             try{
-                stmt.executeQuery();
+                ResultSet rs=stmt.executeQuery();
+
+                if(rs.next()){
+                    Control=true;
+                }
 
 
             } catch (SQLException e) {
@@ -108,17 +118,24 @@ public class Registration extends HttpServlet {
             }
         }
 
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return Control;
     }
     private boolean register (String username, String name, String email, String password, String cognome,
-                              int anno_classe, String sezione, String indirizzo){
-        boolean registrationSuccess = true;
+                              int anno_classe, String sezione, String indirizzo,String zona_geografica){
+        boolean registrationSuccess = false;
         Connection conn = null;
         PreparedStatement stmt = null;
+        JsonObject rocco = new JsonObject();
+
 
         try {
             // Carica il driver JDBC per il database
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
 
             // Ottieni la connessione al database
             String url = "jdbc:mysql://localhost:3306/ticketing";
@@ -126,8 +143,9 @@ public class Registration extends HttpServlet {
             String pass = "";
             conn = DriverManager.getConnection(url, user, pass);
 
+
             // Esegui la query per inserire i dati nella tabella della registrazione
-            String sql = "INSERT INTO utente (ID,Username,Password,Nome,Cognome,email,anno_classe,Sezione,indirizzo,tipo_user) VALUES (NULL,?,?,?,?,?,?,?,?,'guest')";
+            String sql = "INSERT INTO utente (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `indirizzo`, `zona_geografica`, `tipo_utente`) VALUES (NULL,?,?,?,?,?,?,?,?,?,'guest')";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -137,11 +155,20 @@ public class Registration extends HttpServlet {
             stmt.setInt(6, anno_classe);
             stmt.setString(7, sezione);
             stmt.setString(8, indirizzo);
-            int rowsInserted = stmt.executeUpdate();
+            stmt.setString(9, zona_geografica);
 
-            if (rowsInserted > 0) {
-                registrationSuccess = true;
+
+            try {
+
+                int row = stmt.executeUpdate();
+                if(row>0){
+                    registrationSuccess=true;
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
             }
+
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         } finally {
