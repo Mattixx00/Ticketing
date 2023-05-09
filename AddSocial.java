@@ -1,4 +1,4 @@
-package com.example.addsocial;
+package com.example.login;
 
 import java.io.*;
 import java.sql.Connection;
@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "addSocial", value = "/addSocial")
 public class AddSocial extends HttpServlet {
     private String message;
 
@@ -39,7 +39,7 @@ public class AddSocial extends HttpServlet {
 
             // Carica il driver JDBC per il database
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
+                Class.forName("com.mysql.jdbc.Driver");
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -57,8 +57,13 @@ public class AddSocial extends HttpServlet {
             stmt.setString(2, descrizione);
 
             try{
-            stmt.executeUpdate();
-            result.addProperty("AddSocial","success");
+                int row=stmt.executeUpdate();
+
+                if(row>0) {
+                    result.addProperty("AddSocial", "success");
+                }else{
+                    result.addProperty("AddSocial","problem");
+                }
             }catch (SQLException e){
                 result.addProperty("AddSocial","failure");
                 e.printStackTrace();
