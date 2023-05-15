@@ -50,9 +50,9 @@ public class StampaTicket extends HttpServlet {
 		String qry="SELECT * FROM ticket WHERE ID_utente=?";
 		try(Connection conn = datasource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
 			try {
-			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID_Utente")));
+			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID")));
 			}catch(Exception e) {
-				toSend.addProperty("sendstatus", "error");
+				toSend.addProperty("StampaTicketStatus", "failure");
 			}
 			
 		/*	if(!rs.next())
@@ -61,7 +61,7 @@ public class StampaTicket extends HttpServlet {
 			}else {*/
 			try {
 				ResultSet rs = pstmt.executeQuery();
-				toSend.addProperty("sendstatus", "success");
+				toSend.addProperty("StampaTicketStatus", "success");
 			
 			while(rs.next()) {
 				
@@ -83,7 +83,7 @@ public class StampaTicket extends HttpServlet {
 			
 			}catch(SQLException sqe) {
 				sqe.printStackTrace();
-				toSend.addProperty("sendstatus", "error");
+				toSend.addProperty("StampaTicketStatus", "failure");
 			}
 			//}
 			
@@ -94,7 +94,7 @@ public class StampaTicket extends HttpServlet {
 			
 	}catch(SQLException sqe) {
 		sqe.printStackTrace();
-		toSend.addProperty("send-status", "error");
+		toSend.addProperty("StampaTicketStatus", "failure");
 	}
 		response.getWriter().append(toSend.toString());		
 	}

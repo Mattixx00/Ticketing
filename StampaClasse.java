@@ -47,20 +47,20 @@ public class StampaClasse extends HttpServlet {
 		datasource.setDatabaseName("ticketing");
 		JsonObject toSend = new JsonObject();
 		JsonArray ArrInQuery = new JsonArray();
-		String qry="SELECT u.ID,u.nome, u.cognome, u.anno_classe,u.Sezione,u.zona_geoografica, a.materia,a.Descrizione,a.ID as ID_Ticket from Utente u inner join (SELECT c.ID_Studente,t.materia,t.ID,t.Descrizione FROM utente u inner join ticket t on u.ID=t.id_Utente inner join class c on c.ID_Ticket=t.ID and u.ID =1 and c.QueryStatus= 'iNCODA') a on u.ID = a.ID_Studente;";
+		String qry="SELECT u.ID,u.nome, u.cognome, u.anno_classe,u.Sezione,u.zona_geografica, a.materia,a.Descrizione,a.ID as ID_Ticket from Utente u inner join (SELECT c.ID_Studente,t.materia,t.ID,t.Descrizione FROM utente u inner join ticket t on u.ID=t.id_Utente inner join class c on c.ID_Ticket=t.ID and u.ID =1 and c.QueryStatus= 'iNCODA') a on u.ID = a.ID_Studente;";
 		log(qry);
 		log(request.getParameter("ID_Tutor"));
 		try(Connection conn = datasource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
 			try {
 			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID_Tutor")));
 			}catch(Exception e) {
-				toSend.addProperty("searchQuerystatus", "error");
+				toSend.addProperty("PrintClassStatus", "failure");
 			}
 			
 	
 			try {
 				ResultSet rs = pstmt.executeQuery();
-				toSend.addProperty("searchQuerystatus", "success");
+				toSend.addProperty("PrintClassStatus", "successful");
 			
 			while(rs.next()) {
 				
@@ -70,18 +70,18 @@ public class StampaClasse extends HttpServlet {
 				String cognome = rs.getString("cognome");
 				int anno_classe = rs.getInt("anno_classe");
 				String Sezione = rs.getString("Sezione");
-				String zona_geoografica = rs.getString("zona_geoografica");
+				String zona_geografica = rs.getString("zona_geografica");
 				String materia = rs.getString("materia");
 				int ID_Ticket = rs.getInt("ID_Ticket");
 				String descrizione = rs.getString("Descrizione");
 
 				
-				StudentInQuery.addProperty("IDStudent", IDStudent);
+				StudentInQuery.addProperty("ID_Student", IDStudent);
 				StudentInQuery.addProperty("Nome",nome);
 				StudentInQuery.addProperty("Cognome",cognome);
 				StudentInQuery.addProperty("anno_classe",anno_classe);
 				StudentInQuery.addProperty("Sezione",Sezione);
-				StudentInQuery.addProperty("zona_geografica",zona_geoografica);
+				StudentInQuery.addProperty("zona_geografica",zona_geografica);
 				StudentInQuery.addProperty("materia",materia);
 				StudentInQuery.addProperty("Descrizione", descrizione);
 				StudentInQuery.addProperty("ID_Ticket",ID_Ticket);							
@@ -94,7 +94,7 @@ public class StampaClasse extends HttpServlet {
 			
 			}catch(SQLException sqe) {
 				
-				toSend.addProperty("searchQuerystatus", "error-INQUERY");
+				toSend.addProperty("PrintClassStatus", "failure");
 			}
 			//}
 			
@@ -105,7 +105,7 @@ public class StampaClasse extends HttpServlet {
 			
 	}catch(SQLException sqe) {
 		
-		toSend.addProperty("searchQuerystatus", "error");
+		toSend.addProperty("PrintClassStatus", "failure");
 	}
 		response.getWriter().append(toSend.toString());		
 	}

@@ -51,7 +51,7 @@ public class RicercaTutor extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		MysqlDataSource dataSource = new MysqlDataSource();
-		dataSource.setDatabaseName("ticketing2");
+		dataSource.setDatabaseName("ticketing");
 		if(materia.equals("NOFILTRI")) { //Controllo se la materia è null se così esegueo un tipo di query
 		String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione"
 				+ " FROM ticket t inner join utente u on t.ID_utente=u.ID;";
@@ -72,7 +72,7 @@ public class RicercaTutor extends HttpServlet {
 				ticket.addProperty("IDTutor", IDTutor);
 				ticket.addProperty("Nome", Nome);
 				ticket.addProperty("Cognome", Cognome);
-				ticket.addProperty("Email", Email);
+				ticket.addProperty("email", Email);
 				ticket.addProperty("anno_classe", anno_classe);
 				ticket.addProperty("Sezione", Sezione);
 				ticket.addProperty("Materia", Materia);
@@ -84,7 +84,7 @@ public class RicercaTutor extends HttpServlet {
 			toSend.add("Tutors",arrTutor);
 			
 			}catch(Exception e) {
-				toSend.addProperty("FoundStatus", "error");
+				toSend.addProperty("FoundStatus", "failure");
 			}
 			log(toSend.toString());
 			out.append(toSend.toString());
