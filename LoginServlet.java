@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 /**
  * Servlet implementation class LoginServlet
  */
+@WebServlet(name = "Login", value = "/Login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -51,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 
 	        // Leggi i dati dal POST
 	        String username = request.getParameter("Username");
-	        String password = request.getParameter("Passwordo");
+	        String password = request.getParameter("Password");
 	        String toCheck = "";
 	        // Cerca l'utente nel database
 	        JsonObject jsonResponse = new JsonObject();
@@ -61,10 +62,10 @@ public class LoginServlet extends HttpServlet {
 	            ResultSet rs = null;
 
 	            // Carica il driver JDBC per il database
-	            Class.forName("com.mysql.cj.jdbc.Driver");
+	            Class.forName("com.mysql.jdbc.Driver");
 
 	            // Ottieni la connessione al database
-	            String url = "jdbc:mysql://localhost:3306/ticketing2";
+	            String url = "jdbc:mysql://localhost:3306/ticketing";
 	            String user = "root";
 	            String dbPassword = "";
 	            conn = DriverManager.getConnection(url, user, dbPassword);
@@ -72,22 +73,43 @@ public class LoginServlet extends HttpServlet {
 	            // Esegui la query per cercare l'utente
 	            
 	            String sql = "SELECT * FROM utente WHERE Username=?";
+				stmt=conn.prepareStatement(sql);
+				stmt.setString(1,username);
+				rs=stmt.executeQuery();
+
 	            while(rs.next()) {
+					int id_utente=rs.getInt("ID");
 	                toCheck = rs.getString("Password");
 	            }
-	            if (BCrypt.checkpw(password, toCheck)) {
-	            	 jsonResponse.addProperty("LoginStatus", "success");
-		                jsonResponse.addProperty("ID", rs.getInt("ID"));
-		                jsonResponse.addProperty("Username", rs.getString("Username"));
-		                jsonResponse.addProperty("Nome", rs.getString("Nome"));
-		                jsonResponse.addProperty("Cognome", rs.getString("Cognome"));
-		                jsonResponse.addProperty("anno_classe", rs.getInt("anno_classe"));
-		                jsonResponse.addProperty("Sezione", rs.getString("Sezione"));
-		                jsonResponse.addProperty("zona_geografica", rs.getString("zona_geografica"));
-		                
-	           } else {
-	        	   jsonResponse.addProperty("LoginStatus", "failure");
-	           }
+
+				sql = "SELECT * FROM change_pass WHERE Id_utente=?";
+				stmt=conn.prepareStatement(sql);
+				stmt.setString(1,id_utente);
+				rs=stmt.executeQuery();
+
+				if (rs.next()) {
+					jsonResponse.addProperty("LoginStatus", "change password");
+				}
+				else {
+					String sql = "SELECT * FROM utente WHERE Username=?";
+					stmt=conn.prepareStatement(sql);
+					stmt.setString(1,username);
+					rs=stmt.executeQuery();
+
+					if (BCrypt.checkpw(password, toCheck)) {
+						jsonResponse.addProperty("LoginStatus", "success");
+						jsonResponse.addProperty("ID", rs.getInt("ID"));
+						jsonResponse.addProperty("Username", rs.getString("Username"));
+						jsonResponse.addProperty("Nome", rs.getString("Nome"));
+						jsonResponse.addProperty("Cognome", rs.getString("Cognome"));
+						jsonResponse.addProperty("anno_classe", rs.getInt("anno_classe"));
+						jsonResponse.addProperty("Sezione", rs.getString("Sezione"));
+						jsonResponse.addProperty("zona_geografica", rs.getString("zona_geografica"));
+
+					} else {
+						jsonResponse.addProperty("LoginStatus", "failure");
+					}
+				}
 
 	           	          	            //}
 	        } catch (SQLException ex) {
