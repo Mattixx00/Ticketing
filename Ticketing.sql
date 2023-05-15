@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 09, 2023 alle 18:16
+-- Creato il: Mag 15, 2023 alle 17:44
 -- Versione del server: 10.4.27-MariaDB
--- Versione PHP: 8.0.25
+-- Versione PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,17 @@ SET time_zone = "+00:00";
 --
 -- Database: `ticketing`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `change_pass`
+--
+
+CREATE TABLE `change_pass` (
+  `id_utente` int(11) NOT NULL,
+  `pass` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -39,7 +50,6 @@ CREATE TABLE `class` (
 --
 
 INSERT INTO `class` (`ID_Studente`, `ID_Ticket`, `LVLCompetenzaStudente`, `QueryStatus`) VALUES
-(2, 3, 'BASSO', 'Inclass'),
 (1, 2, 'ALTO', 'Inclass'),
 (2, 2, 'NO', 'Incoda'),
 (2, 2, 'BASSO', 'Inclass');
@@ -111,6 +121,12 @@ INSERT INTO `utente` (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, 
 --
 
 --
+-- Indici per le tabelle `change_pass`
+--
+ALTER TABLE `change_pass`
+  ADD PRIMARY KEY (`id_utente`);
+
+--
 -- Indici per le tabelle `class`
 --
 ALTER TABLE `class`
@@ -162,6 +178,12 @@ ALTER TABLE `utente`
 --
 -- Limiti per le tabelle scaricate
 --
+
+--
+-- Limiti per la tabella `change_pass`
+--
+ALTER TABLE `change_pass`
+  ADD CONSTRAINT `change_pass_ibfk_1` FOREIGN KEY (`id_utente`) REFERENCES `utente` (`ID`);
 
 --
 -- Limiti per la tabella `class`
