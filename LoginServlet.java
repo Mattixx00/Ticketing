@@ -92,6 +92,7 @@ public class LoginServlet extends HttpServlet {
 
 				if (rs.next()) {
 					jsonResponse.addProperty("LoginStatus", "change password");
+					jsonResponse.addProperty("id_utente", "id_utente");
 				} else {
 					sql = "SELECT * FROM utente WHERE Username=? AND Password=?";
 					stmt = conn.prepareStatement(sql);
