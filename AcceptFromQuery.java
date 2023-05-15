@@ -59,16 +59,16 @@ public class AcceptFromQuery extends HttpServlet {
 			log(request.getParameter("ID_Ticket"));
 			int success= pstmt.executeUpdate();
 			if(success > 0) {
-				toSend.addProperty("AcceptFromQuerystatus", "successful");
+				toSend.addProperty("AcceptFromQueryStatus", "successful");
 
 			}else {
-				toSend.addProperty("AcceptFromQuerystatus", "error");
+				toSend.addProperty("AcceptFromQueryStatus", "failure");
 
 			}
 			
 			
 		}catch(SQLException sqe) {
-			toSend.addProperty("AcceptFromQuerystatus", "error");
+			toSend.addProperty("AcceptFromQueryStatus", "failure");
 
 		}
 		response.getWriter().append(toSend.toString());	

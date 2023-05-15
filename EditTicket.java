@@ -57,22 +57,22 @@ log(materia);
 		        try {
 		        pstmt.setString(1, materia);
 		        pstmt.setString(2, descrizione);
-		        pstmt.setInt(3, Integer.parseInt(request.getParameter("IDTICKET")));
+		        pstmt.setInt(3, Integer.parseInt(request.getParameter("ID_Ticket")));
 		        }catch(Exception e) {
-		        	modifiedticket.addProperty("editTicketstatus", "error");
+		        	modifiedticket.addProperty("EditTicketStatus", "failure");
 		        }
 		        int success=pstmt.executeUpdate();
 				if(success>0) {
 				
-					modifiedticket.addProperty("editTicketstatus", "successful");
+					modifiedticket.addProperty("EditTicketStatus", "successful");
 					modifiedticket.addProperty("Materia", materia);
 					modifiedticket.addProperty("Descrizione", descrizione);
 					log("d");
 				}else {
-					modifiedticket.addProperty("editTicketstatus", "error");
+					modifiedticket.addProperty("EditTicketStatus", "failure");
 				}
 		    } catch (SQLException ex) {
-		    	modifiedticket.addProperty("editTicketstatus", "error");
+		    	modifiedticket.addProperty("EditTicketStatus", "failure");
 		    }
 		    log(modifiedticket.toString());
 		    out.append(modifiedticket.toString());

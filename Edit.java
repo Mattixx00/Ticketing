@@ -50,30 +50,30 @@ public class Edit extends HttpServlet {
 		String ID=request.getParameter("ID");
 		String Nome=request.getParameter("Nome");
 		String Cognome=request.getParameter("Cognome");
-		String email=request.getParameter("email");
+		//String email=request.getParameter("email");
 		String anno_classe=request.getParameter("anno_classe");
 		String sezione=request.getParameter("Sezione");
-		String indirizzo=request.getParameter("Indirizzo");
+		String zona_geografica=request.getParameter("zona_geografica");
 		//L'ID sarà passato in sessione
 		JsonObject Resp = new JsonObject();
-		String qry="UPDATE utente SET Nome=?, Cognome =?, email =?, anno_classe=? ,Sezione=?,tipo_utente=? WHERE ID=?";
+		String qry="UPDATE utente SET Nome=?, Cognome =?, anno_classe=? ,Sezione=?,zona_geografica=? WHERE ID=?";
 		try(Connection conn = dataSource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
 		try {
 		pstmt.setString(1,Nome);
 		pstmt.setString(2,Cognome);
-		pstmt.setString(3,email);
-		pstmt.setInt(4,Integer.parseInt(anno_classe));
-		pstmt.setString(5,sezione);
-		pstmt.setString(6,indirizzo);
-		pstmt.setInt(7,Integer.parseInt(ID));
+	//	pstmt.setString(3,email);
+		pstmt.setInt(3,Integer.parseInt(anno_classe));
+		pstmt.setString(4,sezione);
+		pstmt.setString(5,zona_geografica);
+		pstmt.setInt(6,Integer.parseInt(ID));
 		int success=pstmt.executeUpdate();
 		if(success>0) {
-			Resp.addProperty("editstatus", "success");
+			Resp.addProperty("EditStatus", "success");
 		}else {
-			Resp.addProperty("editstatus", "failure");
+			Resp.addProperty("EditStatus", "failure");
 		}
 		}catch(SQLException ex) {
-			Resp.addProperty("editstatus", "failure");
+			Resp.addProperty("EditStatus", "failure");
 
 		}
 		
