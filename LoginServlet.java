@@ -53,6 +53,7 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("Username");
 		String password = request.getParameter("Password");
 		String toCheck = "";
+		String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 		// Cerca l'utente nel database
 		JsonObject jsonResponse = new JsonObject();
 		try {
@@ -91,16 +92,17 @@ public class LoginServlet extends HttpServlet {
 				rs = stmt.executeQuery();
 
 				if (rs.next()) {
-					jsonResponse.addProperty("LoginStatus", "change password");
-					jsonResponse.addProperty("id_utente", "id_utente");
+					if(BCrypt.checkpw(password, rs.getString("Password"))) {
+						jsonResponse.addProperty("LoginStatus", "change password");
+						jsonResponse.addProperty("id_utente", "id_utente");
+					}
 				} else {
-					sql = "SELECT * FROM utente WHERE Username=? AND Password=?";
+					sql = "SELECT * FROM utente WHERE Username=?";
 					stmt = conn.prepareStatement(sql);
 					stmt.setString(1, username);
-					stmt.setString(2, password);
 					rs = stmt.executeQuery();
 
-					if (rs.next()) {
+					if (BCrypt.checkpw(password, rs.getString("Password"))) {
 						jsonResponse.addProperty("LoginStatus", "success");
 						jsonResponse.addProperty("ID", rs.getInt("ID"));
 						jsonResponse.addProperty("Username", rs.getString("Username"));
