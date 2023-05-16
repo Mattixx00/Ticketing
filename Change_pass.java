@@ -52,6 +52,7 @@ public class Change_pass extends HttpServlet {
         // Leggi i dati dal POST
         int id_utente = Integer.parseInt(request.getParameter("id_utente"));
         String password = request.getParameter("Password");
+        String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 
         // Cerca l'utente nel database
         JsonObject jsonResponse = new JsonObject();
@@ -74,7 +75,7 @@ public class Change_pass extends HttpServlet {
 
             String sql = "UPDATE utente SET Password=? WHERE ID=?";
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, password);
+            stmt.setString(1, hash);
             stmt.setInt(2, id_utente);
             int row = stmt.executeUpdate();
 
