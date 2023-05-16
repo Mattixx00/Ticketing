@@ -44,7 +44,8 @@ public class EmailReset extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("gagada");	}
+		response.getWriter().append("Prova");
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -53,7 +54,7 @@ public class EmailReset extends HttpServlet {
 		// TODO Auto-generated method stub
 	//	response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
-
+		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		
 		String RandomPass = RandomStringUtils.randomAlphabetic(10);
@@ -100,7 +101,7 @@ public class EmailReset extends HttpServlet {
 		      System.out.println(Mailresponse.getStatusCode());
 		      System.out.println(Mailresponse.getBody());
 		      System.out.println(Mailresponse.getHeaders());
-		      toSend.addProperty("SendMailStatus", "success");
+		      toSend.addProperty("SendMailStatus", "successful");
 		    } catch (IOException ex) {
 		    	toSend.addProperty("SendMailStatus", "failure");
 		    	}
