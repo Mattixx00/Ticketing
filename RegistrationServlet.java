@@ -33,6 +33,7 @@ public class Register extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String hash = BCrypt.hashpw(password, BCrypt.gensalt());
         String cognome = request.getParameter("cognome");
         int anno_classe = Integer.parseInt(request.getParameter("anno_classe"));
         String sezione = request.getParameter("sezione");
@@ -55,7 +56,7 @@ public class Register extends HttpServlet {
 
 
             // Effettua la registrazione
-            boolean registrationSuccess = register(username, name, email, password, cognome, anno_classe, sezione, indirizzo,zona_geografica);
+            boolean registrationSuccess = register(username, name, email, hash, cognome, anno_classe, sezione, indirizzo,zona_geografica);
 
 
             jsonResponse.addProperty("status-registration", registrationSuccess ? "success" : "failed");
