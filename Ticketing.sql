@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 15, 2023 alle 17:44
+-- Creato il: Mag 16, 2023 alle 11:20
 -- Versione del server: 10.4.27-MariaDB
 -- Versione PHP: 8.2.0
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `change_pass` (
   `id_utente` int(11) NOT NULL,
-  `pass` int(11) NOT NULL
+  `pass` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -113,8 +113,8 @@ CREATE TABLE `utente` (
 --
 
 INSERT INTO `utente` (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `zona_geografica`, `tipo_utente`) VALUES
-(1, 'Username', 'age', 'ggg', 'ggg', 'ggg', 4, 'gdf', 'gsdf', 'gs'),
-(2, 'sger', 'age', 'ag', 'hrts', 'gaer', 4, 'ger', 'gaer', 'hrt');
+(1, 'Username', 'ciao', 'ggg', 'ggg', 'ggg', 4, 'gdf', 'gsdf', 'gs'),
+(2, 'mattia', 'age', 'ag', 'hrts', 'gaer', 4, 'ger', 'gaer', 'hrt');
 
 --
 -- Indici per le tabelle scaricate
