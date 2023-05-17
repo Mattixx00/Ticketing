@@ -44,16 +44,17 @@ public class StampaTicket extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		MysqlDataSource datasource = new MysqlDataSource();
-		datasource.setDatabaseName("ticketing2");
+		datasource.setDatabaseName("ticketing");
 		JsonObject toSend = new JsonObject();
 		JsonArray ArrTicket = new JsonArray();
-		String qry="SELECT * FROM ticket WHERE ID_utente=?";
+		String qry="SELECT * FROM ticket WHERE ID_Utente=?";
 		try(Connection conn = datasource.getConnection("root", ""); PreparedStatement pstmt = conn.prepareStatement(qry)) {
 			try {
-			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID")));
+			pstmt.setInt(1,Integer.parseInt(request.getParameter("ID_Utente")));
 			}catch(Exception e) {
 				toSend.addProperty("StampaTicketStatus", "failure");
 			}
+			
 			
 		/*	if(!rs.next())
 			{
@@ -71,9 +72,12 @@ public class StampaTicket extends HttpServlet {
 				String materia = rs.getString("Materia");
 				
 				String descrizione = rs.getString("Descrizione");
+				String Disponibilita_Giorni = rs.getString("Disponibilità_Giorni");
 				TicketJson.addProperty("ID", IDTicket);
 				TicketJson.addProperty("Materia",materia);
 				TicketJson.addProperty("Descrizione",descrizione);
+				TicketJson.addProperty("Disponibilità_Giorni",Disponibilita_Giorni);
+
 				ArrTicket.add(TicketJson);
 				
 			

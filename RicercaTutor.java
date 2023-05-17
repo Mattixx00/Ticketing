@@ -53,8 +53,7 @@ public class RicercaTutor extends HttpServlet {
 		MysqlDataSource dataSource = new MysqlDataSource();
 		dataSource.setDatabaseName("ticketing");
 		if(materia.equals("NOFILTRI")) { //Controllo se la materia è null se così esegueo un tipo di query
-		String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione"
-				+ " FROM ticket t inner join utente u on t.ID_utente=u.ID;";
+		String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione,t.Disponibilità_Giorni FROM ticket t inner join utente u on t.ID_utente=u.ID;";
 		try(Connection conn = dataSource.getConnection("root", ""); Statement stmt = conn.createStatement()){
 			try {
 			ResultSet rs = stmt.executeQuery(qry);
@@ -69,6 +68,7 @@ public class RicercaTutor extends HttpServlet {
 				String Sezione = rs.getString("Sezione");
 				String Materia = rs.getString("Materia");
 				String Descrizione = rs.getString("Descrizione");
+				String Disponibilita_Giorni = rs.getString("Disponibilità_Giorni");
 				ticket.addProperty("IDTutor", IDTutor);
 				ticket.addProperty("Nome", Nome);
 				ticket.addProperty("Cognome", Cognome);
@@ -77,6 +77,7 @@ public class RicercaTutor extends HttpServlet {
 				ticket.addProperty("Sezione", Sezione);
 				ticket.addProperty("Materia", Materia);
 				ticket.addProperty("Descrizione", Descrizione);
+				ticket.addProperty("Disponibilità_Giorni", Disponibilita_Giorni);
 				arrTutor.add(ticket);						 						
 			}
 			
@@ -92,12 +93,12 @@ public class RicercaTutor extends HttpServlet {
 			
 			
 		}catch(Exception e) {
-			toSend.addProperty("FoundStatus", "error");
+			toSend.addProperty("FoundStatus", "failure");
 		}
 		
 			
 		}else {
-			String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione"
+			String qry="SELECT u.ID,u.Nome,u.Cognome,u.email,u.anno_classe,u.Sezione,t.Materia,t.Descrizione,t.Disponibilità_Giorni"
 					+ " FROM ticket t inner join utente u on t.ID_utente=u.ID where materia=?";
 			try(Connection conn = dataSource.getConnection("root", ""); PreparedStatement stmt = conn.prepareStatement(qry)){
 				stmt.setString(1, materia);
@@ -115,6 +116,7 @@ public class RicercaTutor extends HttpServlet {
 					String Sezione = rs.getString("Sezione");
 					String Materia = rs.getString("Materia");
 					String Descrizione = rs.getString("Descrizione");
+					String Disponibilita_Giorni = rs.getString("Disponibilità_Giorni");
 					ticket.addProperty("IDTutor", IDTutor);
 					ticket.addProperty("Nome", Nome);
 					ticket.addProperty("Cognome", Cognome);
@@ -123,15 +125,17 @@ public class RicercaTutor extends HttpServlet {
 					ticket.addProperty("Sezione", Sezione);
 					ticket.addProperty("Materia", Materia);
 					ticket.addProperty("Descrizione", Descrizione);
+					ticket.addProperty("Disponibilità_Giorni", Disponibilita_Giorni);
+
 					arrTutor.add(ticket);												
 				}
 				
-				toSend.addProperty("Found", "successful");
+				toSend.addProperty("FoundStatus", "successful");
 				toSend.add("Tutors",arrTutor);
 				
 				
 			}catch(Exception e) {
-				toSend.addProperty("Found", "error");
+				toSend.addProperty("FoundStatus", "failure");
 			}
 				log(toSend.toString());
 				out.append(toSend.toString());
@@ -139,7 +143,7 @@ public class RicercaTutor extends HttpServlet {
 				
 				
 			}catch(Exception e) {
-				toSend.addProperty("Found", "error");
+				toSend.addProperty("FoundStatus", "failure");
 			}
 			
 			
