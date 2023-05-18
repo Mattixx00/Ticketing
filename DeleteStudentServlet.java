@@ -20,6 +20,7 @@ public class DeleteStudentServlet  extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 						//recupera l'ID dello studente dalla request
 		int ID_studente=Integer.parseInt(request.getParameter("ID_Utente"));
+		int ID_ticket=Integer.parseInt(request.getParameter("ID_Ticket"));
 		response.addHeader("Access-Control-Allow-Origin", "*");
 
 						// Elimina lo studente dal database
@@ -44,13 +45,14 @@ public class DeleteStudentServlet  extends HttpServlet {
 		
 		try {
 			MysqlDataSource ds = new MysqlDataSource();
-			ds.setUrl("jdbc:mysql://localhost:3306/ticketing2");
+			ds.setUrl("jdbc:mysql://localhost:3306/ticketing");
 			
 			Connection conn = ds.getConnection("root","");
 			
-			String query="DELETE FROM class WHERE ID_Studente=?";
+			String query="DELETE FROM class WHERE ID_Studente=? AND ID_Ticket=?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, ID_studente);
+			stmt.setInt(2, ID_ticket);
             int RowsAffected = stmt.executeUpdate();
             if(RowsAffected < 1) {
             	success = false;
