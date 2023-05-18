@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "InserisciTutor", value = "/InserisciTutor")
 public class InserisciTutor extends HttpServlet {
     private String message;
 
@@ -27,6 +27,8 @@ public class InserisciTutor extends HttpServlet {
         int IdUtente = Integer.parseInt(request.getParameter("ID"));
         String materia = request.getParameter("Materia");
         String descrizione = request.getParameter("Descrizione");
+        String giorni = request.getParameter("Disponibilita_Giorni");
+
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -50,31 +52,38 @@ public class InserisciTutor extends HttpServlet {
         }
 
         // Esegui la query per cercare l'utente
-        String sql = "INSERT INTO ticketing (Id,IdUtente, Materia, Descrizione) VALUES (NULL,?, ?, ?);";
+        String sql = "INSERT INTO ticket (ID, Materia, Descrizione,Disponibilità_Giorni,ID_Utente) VALUES (NULL,?,?,?,?);";
         try {
             stmt = conn.prepareStatement(sql);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         try {
-            stmt.setInt(1, IdUtente);
+            stmt.setInt(4, IdUtente);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         try {
-            stmt.setString(2, materia);
+            stmt.setString(1, materia);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         try {
-            stmt.setString(3, descrizione);
+            stmt.setString(2, descrizione);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            stmt.setString(3, giorni);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         int rowsInserted;
         try {
             rowsInserted = stmt.executeUpdate();
-            ticket.addProperty("status", "success");
+            if(rowsInserted>0) {
+                ticket.addProperty("status", "success");
+            }
         } catch (SQLException e) {
             ticket.addProperty("status", "failure");
 
