@@ -1,4 +1,4 @@
-package com.example.addsocial;
+package it.ProgettoNSI;
 
 import com.google.gson.JsonObject;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+//@WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class EditSocial extends HttpServlet {
     private String message;
 

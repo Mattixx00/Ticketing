@@ -1,4 +1,4 @@
-package com.example.demo1;
+package it.ProgettoNSI;
 
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.sql.SQLException;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet(name = "Login", value = "/Login")
+//@WebServlet(name = "Login", value = "/Login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

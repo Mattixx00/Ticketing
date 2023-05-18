@@ -1,5 +1,4 @@
-package com.example.login;
-
+package it.ProgettoNSI;
 import java.io.*;
 import java.sql.*;
 
@@ -7,7 +6,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "AddToQuery", value = "/AddToQuery")
+//@WebServlet(name = "AddToQuery", value = "/AddToQuery")
 public class AddToQuery extends HttpServlet {
     private String message;
 

@@ -1,5 +1,4 @@
-package it.avbo.progettoNSI;
-
+package it.ProgettoNSI;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,11 +19,12 @@ public class DeleteStudentServlet  extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 						//recupera l'ID dello studente dalla request
 		int ID_studente=Integer.parseInt(request.getParameter("ID_Utente"));
-		int ID_ticket=Integer.parseInt(request.getParameter("ID_Ticket"));
+		 int ID_ticket=Integer.parseInt(request.getParameter("ID_Ticket"));
+		
 		response.addHeader("Access-Control-Allow-Origin", "*");
-
+		 
 						// Elimina lo studente dal database
-		boolean success = deleteStudent(ID_studente);
+		boolean success = deleteStudent(ID_studente, ID_ticket);
 		
 		JsonObject jsonR = new JsonObject();
 		if(success) {
@@ -39,7 +39,7 @@ public class DeleteStudentServlet  extends HttpServlet {
 		// response.sendRedirect("https://localhost/pj/DeleteUser"); (?)
 	}
 	
-	private boolean deleteStudent(int ID_studente) {
+	private boolean deleteStudent(int ID_studente, int ID_ticket) {
 		boolean success=true;
 		
 		
@@ -52,6 +52,7 @@ public class DeleteStudentServlet  extends HttpServlet {
 			String query="DELETE FROM class WHERE ID_Studente=? AND ID_Ticket=?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, ID_studente);
+          
 			stmt.setInt(2, ID_ticket);
             int RowsAffected = stmt.executeUpdate();
             if(RowsAffected < 1) {

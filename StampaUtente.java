@@ -1,4 +1,4 @@
-package com.example.login;
+package it.ProgettoNSI;
 
 import java.io.*;
 import java.sql.*;
@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "StampaUtente", value = "/StampaUtente")
+//@WebServlet(name = "StampaUtente", value = "/StampaUtente")
 public class StampaUtente extends HttpServlet {
     private String message;
 
@@ -65,14 +65,14 @@ public class StampaUtente extends HttpServlet {
         try {
             rs = stmt.executeQuery();
             if(rs.next()) {
-                Utente.addProperty("status", "success");
-                Utente.addProperty("username", rs.getString("username"));
+                Utente.addProperty("StampaStatus", "success");
+                Utente.addProperty("Username", rs.getString("username"));
                 Utente.addProperty("email", rs.getString("email"));
-                Utente.addProperty("nome", rs.getString("nome"));
-                Utente.addProperty("cognome", rs.getString("cognome"));
+                Utente.addProperty("Nome", rs.getString("nome"));
+                Utente.addProperty("Cognome", rs.getString("cognome"));
                 Utente.addProperty("anno_classe", rs.getString("anno_classe"));
-                Utente.addProperty("sezione", rs.getString("sezione"));
-                Utente.addProperty("indirizzo", rs.getString("indirizzo"));
+                Utente.addProperty("Sezione", rs.getString("sezione"));
+                //Utente.addProperty("indirizzo", rs.getString("indirizzo"));
                 Utente.addProperty("zona_geografica", rs.getString("zona_geografica"));
 
             }else{

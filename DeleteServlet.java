@@ -1,5 +1,4 @@
-package com.example.login;
-
+package it.ProgettoNSI;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,15 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@WebServlet(name = "Delete", value = "/Delete")
-public class Delete extends HttpServlet {
+//@WebServlet(name = "Delete", value = "/Delete")
+public class DeleteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
         // Leggi i dati dal POST
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("ID"));
 
         boolean deleteSuccess = deleteRecord(id);
 

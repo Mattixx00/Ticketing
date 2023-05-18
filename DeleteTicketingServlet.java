@@ -1,4 +1,4 @@
-package com.example.login;
+package it.ProgettoNSI;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "DeleteTicket", value = "/DeleteTicket")
-public class Login extends HttpServlet {
+//@WebServlet(name = "DeleteTicket", value = "/DeleteTicket")
+public class DeleteTicketingServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Impostazioni per la connessione al database
@@ -35,7 +35,7 @@ public class Login extends HttpServlet {
             throw new RuntimeException(e);
         }
         // Recupera l'ID del ticket da eliminare
-        int ticketId = Integer.parseInt(request.getParameter("ticketId"));
+        int ticketId = Integer.parseInt(request.getParameter("ID"));
 
         // Verifica se l'utente ha cliccato sul pulsante per eliminare il ticket
 

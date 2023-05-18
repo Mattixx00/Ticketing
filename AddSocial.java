@@ -1,4 +1,4 @@
-package com.example.login;
+package it.ProgettoNSI;
 
 import java.io.*;
 import java.sql.Connection;
@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "addSocial", value = "/addSocial")
+//@WebServlet(name = "addSocial", value = "/addSocial")
 public class AddSocial extends HttpServlet {
     private String message;
 

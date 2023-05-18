@@ -1,4 +1,4 @@
-package com.example.inseriscitutor;
+package it.ProgettoNSI;
 
 import java.io.*;
 import java.sql.*;
@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "InserisciTutor", value = "/InserisciTutor")
+//@WebServlet(name = "InserisciTutor", value = "/InserisciTutor")
 public class InserisciTutor extends HttpServlet {
     private String message;
 

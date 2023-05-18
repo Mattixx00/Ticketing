@@ -1,5 +1,4 @@
-package com.example.login;
-
+package it.ProgettoNSI;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@WebServlet(name = "DeclineFromQuery", value = "/DeclineFromQuery")
+//@WebServlet(name = "DeclineFromQuery", value = "/DeclineFromQuery")
 public class DeclineFromQuery extends HttpServlet {
 
     @Override
