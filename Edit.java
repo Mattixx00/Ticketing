@@ -68,7 +68,7 @@ public class Edit extends HttpServlet {
 		pstmt.setInt(6,Integer.parseInt(ID));
 		int success=pstmt.executeUpdate();
 		if(success>0) {
-			Resp.addProperty("EditStatus", "success");
+			Resp.addProperty("EditStatus", "successful");
 		}else {
 			Resp.addProperty("EditStatus", "failure");
 		}
