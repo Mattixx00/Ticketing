@@ -53,7 +53,6 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("Username");
 		String password = request.getParameter("Password");
 		String toCheck = "";
-		String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 		// Cerca l'utente nel database
 		JsonObject jsonResponse = new JsonObject();
 		try {
@@ -62,7 +61,7 @@ public class LoginServlet extends HttpServlet {
 			ResultSet rs = null;
 
 			// Carica il driver JDBC per il database
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 
 
 			// Ottieni la connessione al database
@@ -78,40 +77,43 @@ public class LoginServlet extends HttpServlet {
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 
-			int id_utente = 0;
+			int id_utente;
 
 			if(rs.next()) {
 
 				id_utente = rs.getInt("ID");
 				toCheck = rs.getString("Password");
-
+				username=rs.getString("Username");
+				String nome=rs.getString("Nome");
+				String cognome=rs.getString("Cognome");
+				String email=rs.getString("email");
+				int anno=rs.getInt("anno_classe");
+				String sezione=rs.getString("Sezione");
+				String zona=rs.getString("zona_geografica");
 
 				sql = "SELECT * FROM change_pass WHERE id_utente=?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, id_utente);
 				rs = stmt.executeQuery();
+				jsonResponse.addProperty("rr", "change password2");
 
 				if (rs.next()) {
-					if(BCrypt.checkpw(password, rs.getString("Password"))) {
+					if(BCrypt.checkpw(password, toCheck)) {
 						jsonResponse.addProperty("LoginStatus", "change password");
-						jsonResponse.addProperty("id_utente", "id_utente");
+						jsonResponse.addProperty("id_utente", id_utente);
 					}
 				} else {
-					sql = "SELECT * FROM utente WHERE Username=?";
-					stmt = conn.prepareStatement(sql);
-					stmt.setString(1, username);
-					rs = stmt.executeQuery();
 
-					if (BCrypt.checkpw(password, rs.getString("Password"))) {
+					if (BCrypt.checkpw(password, toCheck)) {
 						jsonResponse.addProperty("LoginStatus", "success");
-						jsonResponse.addProperty("ID", rs.getInt("ID"));
-						jsonResponse.addProperty("Username", rs.getString("Username"));
-						jsonResponse.addProperty("Nome", rs.getString("Nome"));
-						jsonResponse.addProperty("Cognome", rs.getString("Cognome"));
-						jsonResponse.addProperty("email", rs.getString("email"));
-						jsonResponse.addProperty("anno_classe", rs.getInt("anno_classe"));
-						jsonResponse.addProperty("Sezione", rs.getString("Sezione"));
-						jsonResponse.addProperty("zona_geografica", rs.getString("zona_geografica"));
+						jsonResponse.addProperty("ID", id_utente);
+						jsonResponse.addProperty("Username", username);
+						jsonResponse.addProperty("Nome",nome);
+						jsonResponse.addProperty("Cognome",cognome);
+						jsonResponse.addProperty("email", email);
+						jsonResponse.addProperty("anno_classe",anno);
+						jsonResponse.addProperty("Sezione",sezione);
+						jsonResponse.addProperty("zona_geografica", zona);
 
 					} else {
 						jsonResponse.addProperty("LoginStatus", "password errata");
