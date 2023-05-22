@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.demo1;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @WebServlet(name = "Register",value = "/register")
 public class Register extends HttpServlet {
@@ -37,7 +38,6 @@ public class Register extends HttpServlet {
         String cognome = request.getParameter("cognome");
         int anno_classe = Integer.parseInt(request.getParameter("anno_classe"));
         String sezione = request.getParameter("sezione");
-        String indirizzo = request.getParameter("indirizzo");
         String zona_geografica = request.getParameter("zona_geografica");
 
         JsonObject jsonResponse = new JsonObject();
@@ -56,7 +56,7 @@ public class Register extends HttpServlet {
 
 
             // Effettua la registrazione
-            boolean registrationSuccess = register(username, name, email, hash, cognome, anno_classe, sezione, indirizzo,zona_geografica);
+            boolean registrationSuccess = register(username, name, email, hash, cognome, anno_classe, sezione,zona_geografica);
 
 
             jsonResponse.addProperty("status-registration", registrationSuccess ? "success" : "failed");
@@ -127,7 +127,7 @@ public class Register extends HttpServlet {
         return Control;
     }
     private boolean register (String username, String name, String email, String password, String cognome,
-                              int anno_classe, String sezione, String indirizzo,String zona_geografica){
+                              int anno_classe, String sezione, String zona_geografica){
         boolean registrationSuccess = false;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -146,7 +146,7 @@ public class Register extends HttpServlet {
 
 
             // Esegui la query per inserire i dati nella tabella della registrazione
-            String sql = "INSERT INTO utente (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `indirizzo`, `zona_geografica`, `tipo_utente`) VALUES (NULL,?,?,?,?,?,?,?,?,?,'guest')";
+            String sql = "INSERT INTO utente (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `zona_geografica`) VALUES (NULL,?,?,?,?,?,?,?,?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -155,8 +155,7 @@ public class Register extends HttpServlet {
             stmt.setString(5, email);
             stmt.setInt(6, anno_classe);
             stmt.setString(7, sezione);
-            stmt.setString(8, indirizzo);
-            stmt.setString(9, zona_geografica);
+            stmt.setString(8, zona_geografica);
 
 
             try {
