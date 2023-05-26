@@ -17,6 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+
 --
 -- Database: `ticketing`
 --
@@ -45,14 +46,7 @@ CREATE TABLE `class` (
   `QueryStatus` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dump dei dati per la tabella `class`
---
 
-INSERT INTO `class` (`ID_Studente`, `ID_Ticket`, `LVLCompetenzaStudente`, `QueryStatus`) VALUES
-(1, 2, 'ALTO', 'Inclass'),
-(2, 2, 'NO', 'Incoda'),
-(2, 2, 'BASSO', 'Inclass');
 
 -- --------------------------------------------------------
 
@@ -80,15 +74,6 @@ CREATE TABLE `ticket` (
   `ID_Utente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dump dei dati per la tabella `ticket`
---
-
-INSERT INTO `ticket` (`ID`, `Materia`, `Descrizione`, `Disponibilità_Giorni`, `ID_Utente`) VALUES
-(1, 'EDFISICA', 'Strong', 'Giovedi', 1),
-(2, 'ITALIANO', 'NONONO', 'Venerdi, Domenica', 1),
-(3, 'ECONOMIA\r\n                    ', 'CIAO', '', 2),
-(4, 'MATEMATICA', 'NONONO', '', 2);
 
 -- --------------------------------------------------------
 
@@ -108,13 +93,6 @@ CREATE TABLE `utente` (
   `zona_geografica` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dump dei dati per la tabella `utente`
---
-
-INSERT INTO `utente` (`ID`, `Username`, `Password`, `Nome`, `Cognome`, `email`, `anno_classe`, `Sezione`, `zona_geografica`) VALUES
-(1, 'Username', 'ciao', 'ggg', 'ggg', 'ggg', 4, 'gdf', 'gsdf'),
-(2, 'mattia', 'age', 'ag', 'hrts', 'gaer', 4, 'ger', 'gaer');
 
 --
 -- Indici per le tabelle scaricate
